@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3617957282235372235}
   - component: {fileID: 4068566135936027214}
   - component: {fileID: 3713918558261467888}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,9 +88,10 @@ GameObject:
   - component: {fileID: 7928955980446007983}
   - component: {fileID: 7565091126324128527}
   - component: {fileID: 4360265222982329070}
-  - component: {fileID: 5387322723072856779}
   - component: {fileID: -5264633814511347286}
-  m_Layer: 0
+  - component: {fileID: -556882662192475002}
+  - component: {fileID: 1845013043864530825}
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -249,22 +250,6 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_SortAtRoot: 0
---- !u!114 &5387322723072856779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5565494626657822177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d0bc58a16a321740af428774622196f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 3
-  deadZone: -7
-  frequency: 2
-  magnitude: 2
 --- !u!114 &-5264633814511347286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +268,33 @@ MonoBehaviour:
   healthBarCanvas: {fileID: 8048425762903314205}
   hitEffectPrefab: {fileID: 1657610078975196133, guid: 0f40e043a58d20c4d99c7e58ba40e680, type: 3}
   dieEffectPrefab: {fileID: 1657610078975196133, guid: b9288f90a55c2fa47a4722152fe56afa, type: 3}
+--- !u!114 &-556882662192475002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5565494626657822177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b564fe10f2b329a4f9fa333ce34a94b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 2600193014861577933, guid: 0a7804c7f8323334d8458c6339dceaaf, type: 3}
+  fireRate: 2
+  startDelay: 1
+--- !u!114 &1845013043864530825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5565494626657822177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d35ebd0f9cbb94b43b36c01b8ae244ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7926486696536672979
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,7 +306,7 @@ GameObject:
   - component: {fileID: 1688173745640235348}
   - component: {fileID: 2747482482122275271}
   - component: {fileID: 5106811934542942123}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -370,7 +382,7 @@ GameObject:
   - component: {fileID: 6622856905977052547}
   - component: {fileID: 4907291409902243480}
   - component: {fileID: 260262033197857317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnemyHealthBarCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -186,7 +186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2513517176646670933, guid: 9c2ecbade3abc1a45849c8788184b7cc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2.6
       objectReference: {fileID: 0}
     - target: {fileID: 2513517176646670933, guid: 9c2ecbade3abc1a45849c8788184b7cc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -660,28 +660,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1457764853}
-  - component: {fileID: 1457764852}
+  - component: {fileID: 1457764854}
   m_Layer: 0
-  m_Name: EnemyEmit
+  m_Name: EnemySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1457764852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1457764851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14b16f8b879c0194992deb87d0cce332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 5565494626657822177, guid: bca2ad63631799f43b742953f8c8fd1c, type: 3}
-  spawnRate: 1
 --- !u!4 &1457764853
 Transform:
   m_ObjectHideFlags: 0
@@ -697,6 +683,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1457764854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457764851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db1ebd6c4839d1448048e0ae9df4b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 5565494626657822177, guid: bca2ad63631799f43b742953f8c8fd1c, type: 3}
+  planesPerSquad: 5
+  spawnInterval: 0.6
+  waveInterval: 3
+  flightSpeed: 3
+  fireRate: 1.5
 --- !u!1 &1457766972
 GameObject:
   m_ObjectHideFlags: 0
