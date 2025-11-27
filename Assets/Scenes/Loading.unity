@@ -191,8 +191,8 @@ Canvas:
   m_GameObject: {fileID: 60568644}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1963740332}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -497,10 +497,6 @@ PrefabInstance:
     - target: {fileID: 4068725104415320694, guid: d4fe189cf4bd45346889a6abcfdf7228, type: 3}
       propertyPath: m_Name
       value: Panel_Loading
-      objectReference: {fileID: 0}
-    - target: {fileID: 4380043918191598624, guid: d4fe189cf4bd45346889a6abcfdf7228, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 484
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
