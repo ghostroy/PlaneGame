@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f; // 记得恢复时间，否则回主菜单也是暂停的
-        SceneManager.LoadScene(0); // 0 代表 MainMenu场景
+        SceneManager.LoadScene("MainMenu"); 
     }
 
     // --- 5. 直接退出游戏,未来用于在PC端完全退出游戏---
