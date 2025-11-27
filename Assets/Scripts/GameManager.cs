@@ -61,4 +61,22 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    // --- 4. 返回主菜单 ---
+    public void ReturnToMainMenu()
+    {
+        Time.timeScale = 1f; // 记得恢复时间，否则回主菜单也是暂停的
+        SceneManager.LoadScene(0); // 0 代表 MainMenu场景
+    }
+
+    // --- 5. 直接退出游戏,未来用于在PC端完全退出游戏---
+    public void QuitGame()
+    {
+        Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+
+
 }

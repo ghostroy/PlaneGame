@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6205316044015416400}
   - component: {fileID: 6459753004650082645}
-  - component: {fileID: -5940401331981054016}
+  - component: {fileID: -2702227705137887182}
   m_Layer: 5
-  m_Name: Background2
+  m_Name: Background_Battle01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-5940401331981054016
+--- !u!114 &-2702227705137887182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -1033,49 +1033,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1123043314}
     m_Modifications:
-    - target: {fileID: 182858141748925279, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_Name
-      value: Restart
+    - target: {fileID: 2225271290148837299, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
+      propertyPath: m_Color.a
+      value: 0.5019608
       objectReference: {fileID: 0}
-    - target: {fileID: 2080340955118331526, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_Name
-      value: FinalScore
+    - target: {fileID: 2225271290148837299, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
+      propertyPath: m_Color.b
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3777397398623826341, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_Name
-      value: Text
+    - target: {fileID: 2225271290148837299, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
+      propertyPath: m_Color.g
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6348842468959898666, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+    - target: {fileID: 2225271290148837299, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6348842468959898666, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6348842468959898666, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
+    - target: {fileID: 2808442443851909696, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1621842378}
     - target: {fileID: 6348842468959898666, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6348842468959898666, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RestartGame
-      objectReference: {fileID: 0}
-    - target: {fileID: 6348842468959898666, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: GameManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 6348842468959898666, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1621842378}
     - target: {fileID: 6499420022761702796, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
       propertyPath: m_Name
-      value: GameOver
+      value: Panel_GameOver
       objectReference: {fileID: 0}
     - target: {fileID: 6499420022761702796, guid: 05ecbf257aaa1e14b8f8b5eb09c25d06, type: 3}
       propertyPath: m_IsActive
