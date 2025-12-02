@@ -11,6 +11,11 @@ public class EnemyHealth : MonoBehaviour
     public Image healthBarFill; 
     public GameObject healthBarCanvas; // 整个血条对象(用于满血隐藏)
 
+    [Header("掉落设置")]
+    public GameObject powerUpPrefab; // 拖入你的 P-chip Prefab
+    [Range(0f, 1f)] 
+    public float dropChance = 0.3f; // 掉落几率，0.3 代表 30%
+
     // ... 特效变量 ...
     public GameObject hitEffectPrefab; 
     public GameObject dieEffectPrefab; 
@@ -54,6 +59,13 @@ public class EnemyHealth : MonoBehaviour
     {
         if (GameManager.Instance != null) GameManager.Instance.AddScore(scoreValue);
         if (dieEffectPrefab != null) Instantiate(dieEffectPrefab, transform.position, Quaternion.identity);
+        
+        // === 新增掉落逻辑 ===
+        // Random.value 会返回一个 0.0 到 1.0 之间的随机数
+        if (powerUpPrefab != null && Random.value <= dropChance)
+        {
+            Instantiate(powerUpPrefab, transform.position, Quaternion.identity);
+        }
         
         // 如果使用了对象池，血条会跟着物体一起隐藏，所以不需要额外销毁逻辑
         Destroy(gameObject); 

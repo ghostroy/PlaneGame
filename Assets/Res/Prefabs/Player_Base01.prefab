@@ -44,8 +44,9 @@ GameObject:
   - component: {fileID: 7310919705358360403}
   - component: {fileID: 5234857140288083250}
   - component: {fileID: 2907697894023268316}
+  - component: {fileID: 7325331400131876743}
   - component: {fileID: 421138369705986680}
-  - component: {fileID: 7448900050945645098}
+  - component: {fileID: 6438063292537707694}
   m_Layer: 0
   m_Name: Player_Base01
   m_TagString: Player
@@ -109,7 +110,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 6d957ebfd291f474aa62521758904a93, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -207,8 +208,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   padding: 0.5
-  bulletPrefab: {fileID: 5565494626657822177, guid: 8ed0ea73156655344ac6a9e9f38c2860, type: 3}
+--- !u!114 &7325331400131876743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5565494626657822177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04dc24e0277f35a4f993f5f2bd7c00ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   firePoint: {fileID: 8864250452068013093}
+  bulletPrefab: {fileID: 5565494626657822177, guid: 8ed0ea73156655344ac6a9e9f38c2860, type: 3}
   fireRate: 0.2
 --- !u!114 &421138369705986680
 MonoBehaviour:
@@ -224,15 +237,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthBarFill: {fileID: 0}
---- !u!210 &7448900050945645098
-SortingGroup:
+--- !u!114 &6438063292537707694
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5565494626657822177}
   m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_SortAtRoot: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b97f66fd112a67d408af4ccb26639010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxPowerLevel: 7
+  currentPowerLevel: 1
+  currentWeaponType: Laser

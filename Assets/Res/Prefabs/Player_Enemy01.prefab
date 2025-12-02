@@ -87,7 +87,6 @@ GameObject:
   - component: {fileID: 1539572438041275536}
   - component: {fileID: 7928955980446007983}
   - component: {fileID: 7565091126324128527}
-  - component: {fileID: 4360265222982329070}
   - component: {fileID: -5264633814511347286}
   - component: {fileID: -556882662192475002}
   - component: {fileID: 1845013043864530825}
@@ -154,7 +153,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: a7c95792b40724c4ea1c16bc85d33ee8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -238,18 +237,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!210 &4360265222982329070
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5565494626657822177}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_SortAtRoot: 0
 --- !u!114 &-5264633814511347286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,6 +253,8 @@ MonoBehaviour:
   scoreValue: 100
   healthBarFill: {fileID: 5106811934542942123}
   healthBarCanvas: {fileID: 8048425762903314205}
+  powerUpPrefab: {fileID: 3048337756469983815, guid: fef055dc08e69f74eb2b79fb80985657, type: 3}
+  dropChance: 0.3
   hitEffectPrefab: {fileID: 1657610078975196133, guid: 0f40e043a58d20c4d99c7e58ba40e680, type: 3}
   dieEffectPrefab: {fileID: 1657610078975196133, guid: b9288f90a55c2fa47a4722152fe56afa, type: 3}
 --- !u!114 &-556882662192475002
