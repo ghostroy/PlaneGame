@@ -21,6 +21,23 @@ public class PlayerController : MonoBehaviour
         // --- 删除掉这里的 Shoot(); ---
     }
 
+    public void ActivateMagnet(float duration)
+    {
+        StartCoroutine(MagnetRoutine(duration));
+    }
+
+    System.Collections.IEnumerator MagnetRoutine(float duration)
+    {
+        // 修改 PowerUp 里的静态变量，通知所有道具飞过来
+        PowerUp.isGlobalMagnetActive = true;
+        Debug.Log("全屏磁铁激活！");
+
+        yield return new WaitForSeconds(duration);
+
+        PowerUp.isGlobalMagnetActive = false;
+        Debug.Log("磁铁效果结束");
+    }
+
     void InitBounds()
     {
         Camera cam = Camera.main;

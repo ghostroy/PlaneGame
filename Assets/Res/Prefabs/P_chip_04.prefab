@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7183006051877620408}
   - component: {fileID: 8999805609350701823}
   m_Layer: 0
-  m_Name: P-chip
+  m_Name: P_chip_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,9 +99,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 464a352d7eb71db4593efbbca27d19c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
-  waveFrequency: 2
-  waveMagnitude: 1.5
+  itemType: 3
+  amount: 1
+  initialSpeed: 3
+  friction: 2
+  minSpeed: 1
+  baseMagnetRange: 1
+  magnetSpeed: 12
 --- !u!61 &7183006051877620408
 BoxCollider2D:
   m_ObjectHideFlags: 0

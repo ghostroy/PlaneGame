@@ -42,6 +42,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
+    public void TriggerBomb()
+    {
+         // 1. 找到场景里所有的敌人
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+    
+        foreach (GameObject enemy in enemies)
+        {
+        // 调用敌人的受击方法，给予巨大伤害(比如9999)
+            EnemyHealth eh = enemy.GetComponent<EnemyHealth>();
+            if (eh != null)
+            {
+                eh.TakeDamage(9999);
+            }
+            else
+            {
+            Destroy(enemy);
+            }
+        }
+    
+        // 2. 清除全屏子弹 (可选)
+        // 需要给敌人的子弹加一个 Tag 叫 "EnemyBullet"
+        GameObject[] bullets = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        foreach (var b in bullets) Destroy(b);
+
+        // 3. 播放全屏闪白或核弹特效
+        Debug.Log("核弹释放！全屏清除！");
+        // CameraShake.Instance.Shake(); // 震屏
+    }
+
     public void GameOver()
     {
         isGameOver = true;

@@ -2,55 +2,60 @@ using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    // 永久升级的上限，方便在编辑器中调整
-    [Header("武器属性")]
-    public int maxPowerLevel = 7; 
+    [Header("场内状态 (火力规模)")]
+    public int maxScaleLevel = 5; // 场内吃道具最多升到几级
+    public int currentScaleLevel = 1; // 当前火力规模 (决定发几颗子弹)
 
-    // 存储当前关卡内的武器等级 (0-7)
-    [Tooltip("关卡内通过拾取道具获得的临时等级")]
-    public int currentPowerLevel = 1; 
-
-    // 存储玩家选择的主武器类型 (用于未来的多武器切换)
-    // 初始设定为 "Laser"，后续可以从 DataManager 中加载
-    public string currentWeaponType = "Laser"; 
+    [Header("场外属性 (基础伤害)")]
+    public int finalDamageValue; // 最终传给子弹的伤害值 (由 DataManager 决定)
 
     void Start()
     {
-        // 确保等级不会低于 1
-        if (currentPowerLevel < 1)
+        // 1. 初始化火力规模 (每次进关卡重置为 1)
+        currentScaleLevel = 1;
+
+        // 2. 从 DataManager 获取场外养成的伤害值
+        // 如果 DataManager 还没做或场景里没有，就给个默认值 10
+        if (DataManager.Instance != null)
         {
-            currentPowerLevel = 1;
+            finalDamageValue = DataManager.Instance.GetCurrentBaseDamage();
         }
+        else
+        {
+            finalDamageValue = 10; 
+        }
+        
+        Debug.Log($"游戏开始：火力规模 Lv.{currentScaleLevel}, 单发伤害 {finalDamageValue}");
     }
 
-    // === 由 PowerUp.cs 调用 ===
+    // === 【核心修复点】 ===
+    // 方法名必须叫 IncreasePowerLevel，因为您的 PowerUp.cs 是这样调用的
     public void IncreasePowerLevel()
     {
-        if (currentPowerLevel < maxPowerLevel)
+        if (currentScaleLevel < maxScaleLevel)
         {
-            currentPowerLevel++;
-            Debug.Log("武器等级提升至: " + currentPowerLevel);
-            // 未来可以在这里播放升级音效或特效
+            currentScaleLevel++;
+            Debug.Log("吃到道具！火力规模提升至 Lv." + currentScaleLevel);
+            // 这里可以播放 "Power Up" 音效
         }
         else
         {
-            Debug.Log("已达最高等级！");
+            Debug.Log("火力已达上限！");
+            // 满级后吃到道具，通常设计为加分
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddScore(500);
+            }
         }
     }
 
-    // === 由 PlayerHealth.cs 或 GameManager 调用 ===
+    // 降级逻辑 (供 PlayerHealth 玩家受伤时调用)
     public void DowngradeWeapon()
     {
-        if (currentPowerLevel > 1)
+        if (currentScaleLevel > 1)
         {
-            currentPowerLevel--;
-            Debug.Log("武器等级降至: " + currentPowerLevel);
-        }
-        else
-        {
-            // 如果已经是 Level 1，不降级，可能直接触发死亡逻辑或闪烁无敌
+            currentScaleLevel--;
+            Debug.Log("玩家受伤！火力规模降至 Lv." + currentScaleLevel);
         }
     }
-
-    // 未来添加：LoadWeaponStatsFromData(), ChangeWeaponType(), etc.
 }

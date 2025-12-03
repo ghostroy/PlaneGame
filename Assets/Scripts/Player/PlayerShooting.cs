@@ -2,31 +2,21 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [Header("基础设置")]
-    public Transform firePoint;     // 依然需要拖入之前的 FirePoint 子物体
-    public GameObject bulletPrefab; // 拖入你的子弹 Prefab (或者对象池逻辑)
-    public float fireRate = 0.2f;
-
+    [Header("配置")]
+    public Transform firePoint;     // 发射点
+    public float fireRate = 0.2f;   // 射速
     private float nextFireTime = 0f;
     
-    // 引用我们在上一阶段写的武器管理器
+    // 引用
     private WeaponController weaponController;
 
     void Start()
     {
-        // 获取同在 Player 身上的 WeaponController 组件
         weaponController = GetComponent<WeaponController>();
-        
-        // 容错：如果没有挂 WeaponController，就报错提示
-        if (weaponController == null)
-        {
-            Debug.LogError("请在 Player 上挂载 WeaponController 脚本！");
-        }
     }
 
     void Update()
     {
-        // 自动射击 (或者你可以加 Input 判断)
         if (Time.time > nextFireTime)
         {
             Shoot();
@@ -36,67 +26,83 @@ public class PlayerShooting : MonoBehaviour
 
     void Shoot()
     {
-        // 1. 获取当前等级 (如果没有 WeaponController，默认就是等级 1)
-        int level = (weaponController != null) ? weaponController.currentPowerLevel : 1;
+        if (weaponController == null) return;
 
-        // 2. 根据等级决定发射逻辑
-        switch (level)
+        // 1. 获取场内等级 (决定形态)
+        int scaleLevel = weaponController.currentScaleLevel;
+        // 2. 获取场外伤害 (决定数值)
+        int dmg = weaponController.finalDamageValue;
+
+        // 偏移量设置 (根据飞机的宽度适当调整)
+        float innerOffset = 0.15f; // 内侧子弹间距
+        float outerOffset = 0.35f; // 外侧子弹间距
+
+        switch (scaleLevel)
         {
             case 1:
-                FireLevel1();
+                // === Lv.1: 单发直射 ===
+                CreateBullet(firePoint.position, Quaternion.identity, dmg);
                 break;
+
             case 2:
-                FireLevel2();
+                // === Lv.2: 双发直射 ===
+                // 左右各偏移一点
+                CreateBullet(firePoint.position + new Vector3(-innerOffset, 0, 0), Quaternion.identity, dmg);
+                CreateBullet(firePoint.position + new Vector3(innerOffset, 0, 0), Quaternion.identity, dmg);
                 break;
-            case 3: // 等级 3 和以上都用最强火力
-            default: 
-                FireLevel3();
+
+            case 3:
+                // === Lv.3: 三发散射 (1直 + 2斜) ===
+                // (这是之前的逻辑，保留作为过渡)
+                CreateBullet(firePoint.position, Quaternion.identity, dmg);
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, 15), dmg); // 左斜 15度
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, -15), dmg);// 右斜 15度
+                break;
+
+            case 4:
+                // === Lv.4: 双发直线 + 两个斜线 (共4发) ===
+                // 1. 两发直线 (并排)
+                CreateBullet(firePoint.position + new Vector3(-innerOffset, 0, 0), Quaternion.identity, dmg);
+                CreateBullet(firePoint.position + new Vector3(innerOffset, 0, 0), Quaternion.identity, dmg);
+                
+                // 2. 两发斜线 (角度稍微大一点，比如20度)
+                // 位置可以稍微靠外一点，或者从中心发
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, 20), dmg);  // 左斜
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, -20), dmg); // 右斜
+                break;
+
+            case 5:
+            default: // Lv.5及以上
+                // === Lv.5: 三直线 + 两个斜线 (共5发) ===
+                // 1. 三发直线 (中、左、右)
+                CreateBullet(firePoint.position, Quaternion.identity, dmg); // 中心
+                CreateBullet(firePoint.position + new Vector3(-0.25f, 0, 0), Quaternion.identity, dmg); // 左直
+                CreateBullet(firePoint.position + new Vector3(0.25f, 0, 0), Quaternion.identity, dmg);  // 右直
+                
+                // 2. 两发斜线 (大角度，覆盖侧翼)
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, 30), dmg);  // 左大斜
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, -30), dmg); // 右大斜
                 break;
         }
     }
 
-    // --- 等级 1：单发直射 ---
-    void FireLevel1()
+    // 辅助方法：生成并初始化子弹
+    void CreateBullet(Vector3 pos, Quaternion rot, int damageValue)
     {
-        // 使用对象池生成 (如果你还在用 Instantiate，就换回 Instantiate)
-        CreateBullet(firePoint.position, Quaternion.identity);
-    }
-
-    // --- 等级 2：双发直射 (稍微分开一点) ---
-    void FireLevel2()
-    {
-        Vector3 leftPos = firePoint.position + new Vector3(-0.2f, 0, 0);
-        Vector3 rightPos = firePoint.position + new Vector3(0.2f, 0, 0);
-
-        CreateBullet(leftPos, Quaternion.identity);
-        CreateBullet(rightPos, Quaternion.identity);
-    }
-
-    // --- 等级 3：三发散射 (经典雷霆战机扇形) ---
-    void FireLevel3()
-    {
-        // 中间直射
-        CreateBullet(firePoint.position, Quaternion.identity);
+        // 假设你使用了 ObjectPool (如果没有，请改回 Instantiate)
+        GameObject obj = ObjectPool.Instance.GetBullet();
         
-        // 左斜射 (偏转 -15度)
-        CreateBullet(firePoint.position, Quaternion.Euler(0, 0, 15));
-        
-        // 右斜射 (偏转 15度)
-        CreateBullet(firePoint.position, Quaternion.Euler(0, 0, -15));
-    }
-
-    // 封装一个生成子弹的方法，方便切换对象池/Instantiate
-    void CreateBullet(Vector3 pos, Quaternion rot)
-    {
-        // 如果你还在用对象池：
-        GameObject bullet = ObjectPool.Instance.GetBullet();
-        if (bullet != null) 
+        if (obj != null)
         {
-            bullet.transform.position = pos;
-            bullet.transform.rotation = rot;
+            obj.transform.position = pos;
+            obj.transform.rotation = rot;
+            
+            // 注入伤害
+            Bullet bulletScript = obj.GetComponent<Bullet>();
+            if (bulletScript != null)
+            {
+                bulletScript.InitStats(damageValue);
+            }
         }
-
-        // 如果你没有用对象池，用这行：
-        // Instantiate(bulletPrefab, pos, rot);
     }
 }

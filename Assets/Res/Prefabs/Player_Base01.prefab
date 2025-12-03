@@ -249,6 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b97f66fd112a67d408af4ccb26639010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPowerLevel: 7
+  maxPowerLevel: 5
   currentPowerLevel: 1
   currentWeaponType: Laser
