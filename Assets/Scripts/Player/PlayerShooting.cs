@@ -72,16 +72,18 @@ public class PlayerShooting : MonoBehaviour
                 break;
 
             case 5:
-            default: // Lv.5及以上
-                // === Lv.5: 三直线 + 两个斜线 (共5发) ===
-                // 1. 三发直线 (中、左、右)
-                CreateBullet(firePoint.position, Quaternion.identity, dmg); // 中心
-                CreateBullet(firePoint.position + new Vector3(-0.25f, 0, 0), Quaternion.identity, dmg); // 左直
-                CreateBullet(firePoint.position + new Vector3(0.25f, 0, 0), Quaternion.identity, dmg);  // 右直
+            default: 
+                // === Lv.5: 三直线 + 两个斜线 ===
+                // 1. 中间直射
+                CreateBullet(firePoint.position, Quaternion.identity, dmg); 
                 
-                // 2. 两发斜线 (大角度，覆盖侧翼)
-                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, 30), dmg);  // 左大斜
-                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, -30), dmg); // 右大斜
+                // 2. 左右直射 (【修改点】这里使用 outerOffset，之前是手写的数值)
+                CreateBullet(firePoint.position + new Vector3(-outerOffset, 0, 0), Quaternion.identity, dmg); 
+                CreateBullet(firePoint.position + new Vector3(outerOffset, 0, 0), Quaternion.identity, dmg);  
+                
+                // 3. 两个大角度斜线
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, 30), dmg);
+                CreateBullet(firePoint.position, Quaternion.Euler(0, 0, -30), dmg);
                 break;
         }
     }

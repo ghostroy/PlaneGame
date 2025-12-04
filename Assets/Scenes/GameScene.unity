@@ -186,7 +186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2513517176646670933, guid: 9c2ecbade3abc1a45849c8788184b7cc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.6
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 2513517176646670933, guid: 9c2ecbade3abc1a45849c8788184b7cc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -835,6 +835,102 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457766972}
   m_CullTransparentMesh: 1
+--- !u!1 &1577891232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1577891233}
+  - component: {fileID: 1577891234}
+  m_Layer: 0
+  m_Name: LootManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1577891233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577891232}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1577891234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577891232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33a959e463dfd214087b388cc1d1ba90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lootPools:
+  - poolID: 0
+    items:
+    - name: WeaponUp
+      prefab: {fileID: 3048337756469983815, guid: fef055dc08e69f74eb2b79fb80985657, type: 3}
+      weight: 4
+    - name: Health
+      prefab: {fileID: 3048337756469983815, guid: 778c8dca818218047811bcbe35ffe511, type: 3}
+      weight: 4
+    - name: Shield
+      prefab: {fileID: 3048337756469983815, guid: 83072550bdcb9a743a5592e3d7a5af14, type: 3}
+      weight: 4
+    - name: Bomb
+      prefab: {fileID: 3048337756469983815, guid: 4022ddf7a9b746a4bb14f9c965be6ac4, type: 3}
+      weight: 4
+    - name: Magnet
+      prefab: {fileID: 3048337756469983815, guid: 2db4e4f066ed5524fb2428c66a39049d, type: 3}
+      weight: 4
+  - poolID: 1
+    items:
+    - name: WeaponUp
+      prefab: {fileID: 3048337756469983815, guid: fef055dc08e69f74eb2b79fb80985657, type: 3}
+      weight: 4
+    - name: Health
+      prefab: {fileID: 3048337756469983815, guid: 778c8dca818218047811bcbe35ffe511, type: 3}
+      weight: 4
+    - name: Shield
+      prefab: {fileID: 3048337756469983815, guid: 83072550bdcb9a743a5592e3d7a5af14, type: 3}
+      weight: 4
+    - name: Bomb
+      prefab: {fileID: 3048337756469983815, guid: 4022ddf7a9b746a4bb14f9c965be6ac4, type: 3}
+      weight: 4
+    - name: Magnet
+      prefab: {fileID: 3048337756469983815, guid: 2db4e4f066ed5524fb2428c66a39049d, type: 3}
+      weight: 4
+  - poolID: 2
+    items:
+    - name: WeaponUp
+      prefab: {fileID: 3048337756469983815, guid: fef055dc08e69f74eb2b79fb80985657, type: 3}
+      weight: 4
+    - name: Health
+      prefab: {fileID: 3048337756469983815, guid: 778c8dca818218047811bcbe35ffe511, type: 3}
+      weight: 4
+    - name: Shield
+      prefab: {fileID: 3048337756469983815, guid: 83072550bdcb9a743a5592e3d7a5af14, type: 3}
+      weight: 4
+    - name: Bomb
+      prefab: {fileID: 3048337756469983815, guid: 4022ddf7a9b746a4bb14f9c965be6ac4, type: 3}
+      weight: 4
+    - name: Magnet
+      prefab: {fileID: 3048337756469983815, guid: 2db4e4f066ed5524fb2428c66a39049d, type: 3}
+      weight: 4
 --- !u!1 &1621842377
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,6 +941,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1621842379}
   - component: {fileID: 1621842378}
+  - component: {fileID: 1621842380}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -882,6 +979,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1621842380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621842377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8efd6c5ef3ef1b4891b22bfe88620ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyDropCsvFile: {fileID: 4900000, guid: 9402a5b06e6cf9644af5257ee57bb385, type: 3}
+  weaponUpgradeLevel: 1
+  gold: 0
 --- !u!1 &1749686583
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,3 +1280,4 @@ SceneRoots:
   - {fileID: 1621842379}
   - {fileID: 1123043314}
   - {fileID: 1884023106}
+  - {fileID: 1577891233}

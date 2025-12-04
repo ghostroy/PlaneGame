@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7183006051877620408}
   - component: {fileID: 8999805609350701823}
   m_Layer: 0
-  m_Name: P_chip_03
+  m_Name: P_chip_Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 2578690580b081645a2c077a6897d854, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d70c47b01c08fce4f9143f0f605cd0a6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,11 +101,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 2
   amount: 10
-  initialSpeed: 3
+  initialSpeed: 1
   friction: 2
-  minSpeed: 1
-  baseMagnetRange: 1
-  magnetSpeed: 12
+  minSpeed: 0.5
+  baseMagnetRange: 0.5
+  magnetSpeed: 5
 --- !u!61 &7183006051877620408
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.56, y: 2.56}
+    oldSize: {x: 1.28, y: 1.28}
     newSize: {x: 2.56, y: 2.56}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
