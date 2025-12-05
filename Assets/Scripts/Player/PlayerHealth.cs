@@ -82,4 +82,46 @@ public class PlayerHealth : MonoBehaviour
         // 播放爆炸特效...
         Destroy(gameObject);
     }
+
+    // === 【新增】处理撞击逻辑 ===
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        // 1. 撞到敌人 (保持用 Tag，因为 Enemy 这个 Tag 是 Unity 自带或者你肯定设过的)
+        if (other.CompareTag("Enemy"))
+        {
+            EnemyHealth enemy = other.GetComponent<EnemyHealth>();
+            
+            if (isInvincible)
+            {
+                // 无敌状态：秒杀敌人
+                if(enemy != null) enemy.TakeDamage(9999);
+                else Destroy(other.gameObject);
+            }
+            else
+            {
+                // 普通状态：互相伤害
+                if(enemy != null) enemy.TakeDamage(100); 
+                else Destroy(other.gameObject);
+
+                TakeDamage(30); // 玩家扣血
+            }
+        }
+        
+        // 2. === 【修改点】撞到敌人子弹 ===
+        // 不要用 other.CompareTag("EnemyBullet")，因为这需要你去编辑器设置Tag，容易忘。
+        // 改用：检查它身上有没有 EnemyBullet 脚本组件
+        
+        EnemyBullet bullet = other.GetComponent<EnemyBullet>();
+
+        if (bullet != null)
+        {
+             // 只有在无敌状态下，我们需要在这里处理子弹
+             // (因为普通状态下，子弹自己的脚本会处理扣血)
+             if (isInvincible)
+             {
+                 Destroy(other.gameObject); // 护盾挡住并销毁子弹
+                 Debug.Log("护盾挡住了子弹！");
+             }
+        }
+    }
 }

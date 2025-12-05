@@ -1,23 +1,29 @@
 using UnityEngine;
-using UnityEngine.UI; // 依然保留，因为 Button 和 Panel 还在用原生 UI
 using UnityEngine.SceneManagement;
-using TMPro; // 引入 TMP 命名空间
+using TMPro; // 引用 TMP
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     [Header("UI 设置")]
-    
     public TMP_Text scoreText;          
-    public GameObject gameOverPanel;  
+    public GameObject gameOverPanel;
     public TMP_Text finalScoreText;     
+
     private int score = 0;
     private bool isGameOver = false;
 
     void Awake()
     {
+        // === 1. 单例初始化 ===
+        // 覆盖 Instance，确保每个场景都有新的 GameManager
         Instance = this;
+
+        // === 2. 强制恢复时间 ===
+        // 防止上一局暂停导致新游戏卡住
+        Time.timeScale = 1f;
+        isGameOver = false;
     }
 
     void Start()
@@ -37,48 +43,18 @@ public class GameManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            // TMP 的赋值方式和旧版 Text 完全一样，也是 .text
             scoreText.text = "Score: " + score;
         }
     }
 
-    
-    public void TriggerBomb()
-    {
-        // 1. 全屏清怪 (保持不变)
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (GameObject enemy in enemies)
-        {
-            EnemyHealth eh = enemy.GetComponent<EnemyHealth>();
-            if (eh != null)
-            {
-                eh.TakeDamage(9999);
-            }
-            else
-            {
-                Destroy(enemy);
-            }
-        }
-
-        // 2. === 清除全屏子弹 ===
-        
-        EnemyBullet[] bullets = FindObjectsOfType<EnemyBullet>();
-        
-        foreach (EnemyBullet b in bullets)
-        {
-            // 播放一个小的消失特效(可选)
-            // if(hitEffect != null) Instantiate(hitEffect, b.transform.position, Quaternion.identity);
-            
-            Destroy(b.gameObject);
-        }
-
-        Debug.Log("核弹释放！全屏清除！");
-    }
-
+    // === 3. 游戏结束逻辑 ===
     public void GameOver()
     {
+        if (isGameOver) return;
         isGameOver = true;
         
+        Debug.Log("游戏结束！");
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
@@ -89,27 +65,50 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // === 4. 重启逻辑 ===
     public void RestartGame()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-    // --- 4. 返回主菜单 ---
+    
+    // === 5. 返回主菜单 ===
     public void ReturnToMainMenu()
     {
-        Time.timeScale = 1f; // 记得恢复时间，否则回主菜单也是暂停的
-        SceneManager.LoadScene("MainMenu"); 
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
 
-    // --- 5. 直接退出游戏,未来用于在PC端完全退出游戏---
-    public void QuitGame()
+    // === 6. 【补回】核弹清屏逻辑 ===
+    public void TriggerBomb()
     {
-        Application.Quit();
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
+        // A. 清除所有敌人
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            EnemyHealth eh = enemy.GetComponent<EnemyHealth>();
+            if (eh != null)
+            {
+                // 造成巨额伤害
+                eh.TakeDamage(9999);
+            }
+            else
+            {
+                Destroy(enemy);
+            }
+        }
+
+        // B. 清除所有子弹 (使用类型查找，不依赖 Tag，防止报错)
+        EnemyBullet[] bullets = FindObjectsOfType<EnemyBullet>();
+        foreach (EnemyBullet b in bullets)
+        {
+            // 这里可以加一个子弹消失特效
+            Destroy(b.gameObject);
+        }
+
+        Debug.Log("核弹释放！全屏清除！");
+        
+        // 震屏效果 (如果以后加了相机震动脚本，可以在这里调用)
+        // CameraShake.Instance.Shake(); 
     }
-
-
 }
