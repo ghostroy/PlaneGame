@@ -1,99 +1,123 @@
 using System.Collections;
+using System.Collections.Generic; // 引入 List
 using UnityEngine;
 
 public class SquadSpawner : MonoBehaviour
 {
-    [Header("核心设置")]
-    public GameObject enemyPrefab;
+    [Header("敌人预制体")]
+    public GameObject smallEnemyPrefab;  // 小飞机
+    public GameObject mediumEnemyPrefab; // 中型飞机
     
     [Header("编队设置")]
-    public int planesPerSquad = 5;      // 一队有几架飞机 (5架)
-    public float spawnInterval = 0.6f;  // 队内每架飞机的生成间隔
-    public float waveInterval = 5f;     // 两队之间的等待时间 (5秒)
+    public int planesPerSquad = 5;      // 小队数量
+    public float spawnInterval = 0.6f;  // 小队内生成间隔
+    public float waveInterval = 3f;     // 两波小队之间的间隔
+    public float flightSpeed = 5f; // <--- 在 Inspector 里改这个值
 
-    [Header("飞机属性控制")]
-    public float flightSpeed = 5f;      // 控制飞机飞行速度
-    public float fireRate = 1.5f;       // 控制飞机开火频率
+    [Header("中型飞机设置")]
+    public float mediumSpeed = 3f;
+    public float stopHeight = 3f;       // 停在 Y=3 的高度
 
-    // 屏幕边界缓存
+    // 屏幕边界
     private Vector2 screenBounds;
-    private float spawnY; // 生成高度
-    private float spawnX; // 生成的X轴偏移量
+    private float spawnY; 
+    private float spawnX; 
 
     void Start()
     {
-        // 计算屏幕边界，确保生成点在屏幕外
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-        spawnY = screenBounds.y + 1.5f; // 屏幕顶端上方
-        spawnX = screenBounds.x + 1.0f; // 屏幕侧边外侧
-
-        StartCoroutine(SquadRoutine());
+        spawnY = screenBounds.y + 1.5f;
+        spawnX = screenBounds.x + 1.0f; 
+        
+        StartCoroutine(MainLevelLoop());
     }
 
-    IEnumerator SquadRoutine()
+    // === 主关卡循环逻辑 ===
+    IEnumerator MainLevelLoop()
     {
+        // 这是一个无限循环，代表关卡一直进行
         while (true)
         {
-            // --- 第一阶段：左侧编队 (往右下飞) ---
-            yield return StartCoroutine(SpawnSquad(true));
-
-            // 等待波次间隔
+            // --- 第 1 步：生成左侧小队 ---
+            Debug.Log("Wave 1: 左侧突袭");
+            yield return StartCoroutine(SpawnSmallSquad(true));
+            
+            // 等待
             yield return new WaitForSeconds(waveInterval);
 
-            // --- 第二阶段：右侧编队 (往左下飞) ---
-            yield return StartCoroutine(SpawnSquad(false));
-
-            // 等待波次间隔，然后循环
+            // --- 第 2 步：生成右侧小队 ---
+            Debug.Log("Wave 2: 右侧突袭");
+            yield return StartCoroutine(SpawnSmallSquad(false));
+            
+            // 等待，准备迎接精英怪
             yield return new WaitForSeconds(waveInterval);
+
+            // --- 第 3 步：生成中型精英，并【死锁】直到它们死亡 ---
+            Debug.Log("Wave 3: 精英进场 (锁定中...)");
+            yield return StartCoroutine(SpawnAndWaitForElites());
+
+            // --- 第 4 步：稍微休息一下，进入下一个大循环 ---
+            Debug.Log("精英已清除，下一波准备...");
+            yield return new WaitForSeconds(2f);
         }
     }
 
-    // 生成一整队飞机的逻辑
-    IEnumerator SpawnSquad(bool isLeftSide)
+    // 生成小飞机的逻辑 (不再包含计数器)
+    IEnumerator SpawnSmallSquad(bool isLeftSide)
     {
-        // 设定起始点和飞行方向
-        Vector2 startPos;
-        Vector2 flyDirection;
+        Vector2 startPos = isLeftSide ? new Vector2(-spawnX, spawnY) : new Vector2(spawnX, spawnY);
+        Vector2 flyDirection = isLeftSide ? new Vector2(1f, -0.8f) : new Vector2(-1f, -0.8f);
 
-        if (isLeftSide)
-        {
-            // 左上角生成，向右下角飞 (X=1, Y=-1)
-            startPos = new Vector2(-spawnX, spawnY);
-            flyDirection = new Vector2(0.5f, -0.8f); // -0.8f 决定了下落的陡峭程度
-        }
-        else
-        {
-            // 右上角生成，向左下角飞 (X=-1, Y=-1)
-            startPos = new Vector2(spawnX, spawnY);
-            flyDirection = new Vector2(-0.5f, -0.8f);
-        }
-
-        // 循环生成指定数量的飞机
         for (int i = 0; i < planesPerSquad; i++)
         {
-            SpawnSingleEnemy(startPos, flyDirection);
+            SpawnSmallEnemy(startPos, flyDirection);
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
-    void SpawnSingleEnemy(Vector2 pos, Vector2 dir)
+    void SpawnSmallEnemy(Vector2 pos, Vector2 dir)
     {
-        GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
-
-        // 1. 初始化移动逻辑
-        DiagonalMovement movement = enemy.GetComponent<DiagonalMovement>();
-        if (movement != null)
+        if (smallEnemyPrefab == null) return;
+        GameObject enemy = Instantiate(smallEnemyPrefab, pos, Quaternion.identity);
+        
+        DiagonalMovement move = enemy.GetComponent<DiagonalMovement>();
+        if (move != null) 
         {
-            movement.Initialize(dir, flightSpeed);
+            // === 修改点：把原来的 5f 改成 flightSpeed 变量 ===
+            move.Initialize(dir, flightSpeed); 
+        }
+    }
+
+    // === 核心：生成精英并等待死亡 ===
+    IEnumerator SpawnAndWaitForElites()
+    {
+        // 1. 定义生成位置和目标位置
+        Vector2 leftSpawn = new Vector2(-screenBounds.x * 0.5f, spawnY);
+        Vector2 leftTarget = new Vector2(-screenBounds.x * 0.5f, stopHeight);
+
+        Vector2 rightSpawn = new Vector2(screenBounds.x * 0.5f, spawnY);
+        Vector2 rightTarget = new Vector2(screenBounds.x * 0.5f, stopHeight);
+
+        // 2. 生成并保存引用 (Keep References)
+        GameObject elite1 = Instantiate(mediumEnemyPrefab, leftSpawn, Quaternion.identity);
+        GameObject elite2 = Instantiate(mediumEnemyPrefab, rightSpawn, Quaternion.identity);
+
+        // 3. 初始化它们的移动
+        if (elite1.GetComponent<StopAndShootMovement>()) 
+            elite1.GetComponent<StopAndShootMovement>().Initialize(leftTarget, mediumSpeed);
+        
+        if (elite2.GetComponent<StopAndShootMovement>()) 
+            elite2.GetComponent<StopAndShootMovement>().Initialize(rightTarget, mediumSpeed);
+
+        // 4. 【死锁检查】只要还有一个活着，就卡在这里不往下走
+        // 检查 elite1 != null 是因为当物体被 Destroy 后，Unity 会把引用变成 null
+        while (elite1 != null || elite2 != null)
+        {
+            // 每帧检查一次
+            yield return null; 
         }
 
-        // 2. 初始化开火逻辑 (覆盖 Prefab 里的默认设置)
-        EnemyShooting shooting = enemy.GetComponent<EnemyShooting>();
-        if (shooting != null)
-        {
-            shooting.fireRate = fireRate;
-            // 每次修改fireRate后，最好重置一下它的计时器，但这取决于你的Shooting脚本写法
-            // 简单的做法是直接赋值即可，Shooting脚本下次射击会采用新频率
-        }
+        // 代码运行到这里，说明 elite1 和 elite2 都变成 null 了 (都死了)
+        Debug.Log("精英已被击败！解锁下一波。");
     }
 }

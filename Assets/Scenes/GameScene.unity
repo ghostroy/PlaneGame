@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 5565494626657822177, guid: 8ed0ea73156655344ac6a9e9f38c2860, type: 3}
-  poolSize: 20
+  poolSize: 30
 --- !u!4 &60661486
 Transform:
   m_ObjectHideFlags: 0
@@ -223,6 +223,10 @@ PrefabInstance:
     - target: {fileID: 5565494626657822177, guid: 9c2ecbade3abc1a45849c8788184b7cc, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5565494626657822177, guid: 9c2ecbade3abc1a45849c8788184b7cc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -695,12 +699,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3db1ebd6c4839d1448048e0ae9df4b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 5565494626657822177, guid: bca2ad63631799f43b742953f8c8fd1c, type: 3}
-  planesPerSquad: 5
+  smallEnemyPrefab: {fileID: 5565494626657822177, guid: bca2ad63631799f43b742953f8c8fd1c, type: 3}
+  mediumEnemyPrefab: {fileID: 5565494626657822177, guid: 0ad2d421ced2da34f8eacd45dab9720d, type: 3}
+  planesPerSquad: 8
   spawnInterval: 0.6
   waveInterval: 3
-  flightSpeed: 3
-  fireRate: 1.5
+  flightSpeed: 2
+  mediumSpeed: 2
+  stopHeight: 3
 --- !u!1 &1457766972
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,53 +890,18 @@ MonoBehaviour:
     items:
     - name: WeaponUp
       prefab: {fileID: 3048337756469983815, guid: fef055dc08e69f74eb2b79fb80985657, type: 3}
-      weight: 4
-    - name: Health
-      prefab: {fileID: 3048337756469983815, guid: 778c8dca818218047811bcbe35ffe511, type: 3}
-      weight: 4
+      weight: 80
     - name: Shield
       prefab: {fileID: 3048337756469983815, guid: 83072550bdcb9a743a5592e3d7a5af14, type: 3}
-      weight: 4
-    - name: Bomb
-      prefab: {fileID: 3048337756469983815, guid: 4022ddf7a9b746a4bb14f9c965be6ac4, type: 3}
-      weight: 4
-    - name: Magnet
-      prefab: {fileID: 3048337756469983815, guid: 2db4e4f066ed5524fb2428c66a39049d, type: 3}
-      weight: 4
+      weight: 20
   - poolID: 1
     items:
-    - name: WeaponUp
-      prefab: {fileID: 3048337756469983815, guid: fef055dc08e69f74eb2b79fb80985657, type: 3}
-      weight: 4
     - name: Health
       prefab: {fileID: 3048337756469983815, guid: 778c8dca818218047811bcbe35ffe511, type: 3}
-      weight: 4
-    - name: Shield
-      prefab: {fileID: 3048337756469983815, guid: 83072550bdcb9a743a5592e3d7a5af14, type: 3}
-      weight: 4
-    - name: Bomb
-      prefab: {fileID: 3048337756469983815, guid: 4022ddf7a9b746a4bb14f9c965be6ac4, type: 3}
-      weight: 4
+      weight: 20
     - name: Magnet
       prefab: {fileID: 3048337756469983815, guid: 2db4e4f066ed5524fb2428c66a39049d, type: 3}
-      weight: 4
-  - poolID: 2
-    items:
-    - name: WeaponUp
-      prefab: {fileID: 3048337756469983815, guid: fef055dc08e69f74eb2b79fb80985657, type: 3}
-      weight: 4
-    - name: Health
-      prefab: {fileID: 3048337756469983815, guid: 778c8dca818218047811bcbe35ffe511, type: 3}
-      weight: 4
-    - name: Shield
-      prefab: {fileID: 3048337756469983815, guid: 83072550bdcb9a743a5592e3d7a5af14, type: 3}
-      weight: 4
-    - name: Bomb
-      prefab: {fileID: 3048337756469983815, guid: 4022ddf7a9b746a4bb14f9c965be6ac4, type: 3}
-      weight: 4
-    - name: Magnet
-      prefab: {fileID: 3048337756469983815, guid: 2db4e4f066ed5524fb2428c66a39049d, type: 3}
-      weight: 4
+      weight: 80
 --- !u!1 &1621842377
 GameObject:
   m_ObjectHideFlags: 0

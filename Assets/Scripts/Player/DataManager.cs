@@ -21,6 +21,7 @@ public class DataManager : MonoBehaviour
     {
         public int id;            // 敌人ID (1001)
         public string name;       // 名字
+        public int hp;            // 敌人血量
         public int minGold;       // 最少金币
         public int maxGold;       // 最多金币
         public float extraChance; // 额外掉落率 (0.0 ~ 1.0)
@@ -85,15 +86,19 @@ public class DataManager : MonoBehaviour
             {
                 EnemyDropConfig config = new EnemyDropConfig();
 
-                // === 关键修复：使用 .Trim() 去除数字周围可能存在的空格 ===
+                // 注意索引变化！
                 config.id = int.Parse(values[0].Trim()); 
                 config.name = values[1].Trim();
-                config.minGold = int.Parse(values[2].Trim());
-                config.maxGold = int.Parse(values[3].Trim());
-                config.extraChance = float.Parse(values[4].Trim());
-                config.poolID = int.Parse(values[5].Trim());
+                
+                // 【新增】读取第 2 列 HP
+                config.hp = int.Parse(values[2].Trim()); 
 
-                // 存入字典
+                // 【修改】后面的索引全部 +1
+                config.minGold = int.Parse(values[3].Trim());
+                config.maxGold = int.Parse(values[4].Trim());
+                config.extraChance = float.Parse(values[5].Trim());
+                config.poolID = int.Parse(values[6].Trim());
+
                 if (!dropTableMap.ContainsKey(config.id))
                 {
                     dropTableMap.Add(config.id, config);
