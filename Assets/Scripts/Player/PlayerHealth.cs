@@ -30,22 +30,30 @@ public class PlayerHealth : MonoBehaviour
     }
 
     // === 道具调用：开启护盾 ===
-    public void ActivateShield(float duration)
+    public void ActivateShield(float duration, bool showVisual = true)
     {
-        StartCoroutine(ShieldRoutine(duration));
+        StartCoroutine(ShieldRoutine(duration, showVisual));
     }
 
-    System.Collections.IEnumerator ShieldRoutine(float duration)
+    // 修改协程签名
+    System.Collections.IEnumerator ShieldRoutine(float duration, bool showVisual)
     {
         isInvincible = true;
-        if(shieldVisual != null) shieldVisual.SetActive(true);
         
-        Debug.Log("护盾开启！");
+        // === 【修改】只有当 showVisual 为 true 时才显示蓝圈 ===
+        if(shieldVisual != null && showVisual) 
+        {
+            shieldVisual.SetActive(true);
+        }
+        
+        Debug.Log($"无敌状态开启 (特效: {showVisual})");
+
         yield return new WaitForSeconds(duration);
         
         isInvincible = false;
+        
         if(shieldVisual != null) shieldVisual.SetActive(false);
-        Debug.Log("护盾消失");
+        Debug.Log("无敌状态结束");
     }
 
     public void TakeDamage(int damage)

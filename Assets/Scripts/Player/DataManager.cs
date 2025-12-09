@@ -7,7 +7,8 @@ public class DataManager : MonoBehaviour
     public static DataManager Instance;
 
     [Header("配置数据 (请拖入 Assets/Data/EnemyDropData)")]
-    public TextAsset enemyDropCsvFile; // 在 Inspector 中拖入 CSV 文件
+    public TextAsset enemyDropCsvFile; // 掉落表
+    public TextAsset itemDataCsvFile; // 物品列表
 
     [Header("玩家存档")]
     public int weaponUpgradeLevel = 1; // 场外武器等级
@@ -29,6 +30,17 @@ public class DataManager : MonoBehaviour
         public int poolID;        // 掉落池ID
     }
 
+     public class ItemConfig
+    {
+        public int id;
+        public string name;
+        public ItemType type; // 枚举类型
+        public int value;     // 数值
+    }
+
+    // 道具数据字典
+    public Dictionary<int, ItemConfig> itemTableMap = new Dictionary<int, ItemConfig>();
+
     void Awake()
     {
         // 单例模式初始化
@@ -39,6 +51,7 @@ public class DataManager : MonoBehaviour
             
             LoadData();      // 1. 读取玩家金币和等级
             LoadCSVTable();  // 2. 读取 CSV 配置表
+            LoadItemTable(); // 3. 读取道具表
         }
         else
         {
@@ -112,6 +125,57 @@ public class DataManager : MonoBehaviour
         }
 
         Debug.Log($"✅ CSV 配置表加载完毕！共加载 {dropTableMap.Count} 条敌人数据。");
+    }
+
+     void LoadItemTable()
+    {
+        if (itemDataCsvFile == null)
+        {
+            Debug.LogError("❌ 道具 CSV 未绑定！请在 DataManager 面板拖入 ItemData.csv");
+            return;
+        }
+
+        string[] lines = itemDataCsvFile.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i];
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            if (i == 1) line = line.TrimStart('\uFEFF'); // 去除BOM
+
+            string[] values = line.Split(',');
+
+            try
+            {
+                ItemConfig config = new ItemConfig();
+                config.id = int.Parse(values[0].Trim());
+                config.name = values[1].Trim();
+                
+                // 【核心】将字符串转为枚举 (大小写必须匹配)
+                string typeStr = values[2].Trim();
+                config.type = (ItemType)Enum.Parse(typeof(ItemType), typeStr);
+
+                config.value = int.Parse(values[3].Trim());
+
+                if (!itemTableMap.ContainsKey(config.id))
+                {
+                    itemTableMap.Add(config.id, config);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"道具表解析错误 [第{i}行]: {e.Message}");
+            }
+        }
+        Debug.Log($"✅ 道具表加载完毕，共 {itemTableMap.Count} 条数据。");
+    }
+
+    // 获取道具配置的接口
+    public ItemConfig GetItemConfig(int itemID)
+    {
+        if (itemTableMap.ContainsKey(itemID))
+            return itemTableMap[itemID];
+        return null;
     }
 
     // 提供给 EnemyHealth 调用的查询方法

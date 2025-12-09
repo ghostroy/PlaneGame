@@ -26,6 +26,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // === 【新增】安全重置 ===
+        // 防止上一局游戏胜利后把磁铁打开了，导致新游戏一开始道具就乱飞
+        PowerUp.isGlobalMagnetActive = false;
+
         if(gameOverPanel != null) gameOverPanel.SetActive(false);
         if(victoryPanel != null) victoryPanel.SetActive(false); // 隐藏胜利面板
         UpdateScoreUI();
@@ -69,7 +73,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("🎉 关卡胜利！BOSS 已被击败！");
         
         // 稍微延迟一下显示面板，体验更好
-        Invoke("ShowVictoryPanel", 2f);
+        Invoke("ShowVictoryPanel", 1f);
     }
 
     void ShowVictoryPanel()
@@ -78,12 +82,17 @@ public class GameManager : MonoBehaviour
         {
             victoryPanel.SetActive(true);
             
-            
-            // === 【新增】为了安全，胜利时清除全屏敌人和子弹 ===
+            // 1. 清除全屏危险 (敌人/子弹)
             TriggerBomb(); 
 
-            // === 【新增】禁止玩家操作 ===
+            // 2. 禁止玩家操作 (防止胜利后乱跑)
             DisablePlayerControl();
+
+            // 3. === 【核心修改】开启全屏磁铁 ===
+            // 此时 Boss 掉落的物品已经散落在地上了
+            // 这行代码会让它们全部自动飞向玩家
+            PowerUp.isGlobalMagnetActive = true;
+            Debug.Log("🧲 胜利结算：自动吸附所有战利品！");
         }
     }
 
@@ -103,7 +112,8 @@ public class GameManager : MonoBehaviour
 
             // 3. (可选) 让玩家进入无敌状态，防止意外死亡
             PlayerHealth ph = player.GetComponent<PlayerHealth>();
-            if (ph != null) ph.ActivateShield(999f); // 给个超长护盾
+            // === 【修改点 2】传入 false，开启无敌但不显示特效 ===
+            if (ph != null) ph.ActivateShield(999f, false);
         }
     }
 

@@ -44,14 +44,14 @@ public class EnemyShooting : MonoBehaviour
     bool IsOnScreen()
     {
         if (mainCam == null) return false;
-
-        // 把世界坐标转换为视口坐标 (0~1)
         Vector3 viewPos = mainCam.WorldToViewportPoint(transform.position);
 
-        // 判断 X 和 Y 是否都在 0 和 1 之间
-        // 这里我稍微放宽了一点点 (-0.05 ~ 1.05)，防止刚露头就不射击，或者刚出去一点点就停
-        bool onScreen = viewPos.x > -0.05f && viewPos.x < 1.05f && 
-                        viewPos.y > -0.05f && viewPos.y < 1.05f;
+        // === 【修改点】 ===
+        // 原来是 1.05f (允许稍微出界)
+        // 改成 0.95f (必须完全进入屏幕内一段距离才允许开火)
+        // 这样飞机必须整个身子都飞进来了，才会开始攻击
+        bool onScreen = viewPos.x > 0.05f && viewPos.x < 0.95f && 
+                        viewPos.y > 0.05f && viewPos.y < 0.95f;
 
         return onScreen;
     }

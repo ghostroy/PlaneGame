@@ -34,6 +34,9 @@ public class EnemyHealth : MonoBehaviour
     // 波次奖励标记
     private bool isWaveBonusTarget = false;
 
+    // 【新增】防止重复死亡的锁
+    private bool isDead = false;
+
     // 内部类定义
     [System.Serializable]
     public class LootItem
@@ -99,8 +102,11 @@ public class EnemyHealth : MonoBehaviour
         this.isWaveBonusTarget = isBonus;
     }
 
-    public void TakeDamage(int damage)
+     public void TakeDamage(int damage)
     {
+        // 如果已经死透了，就不要鞭尸了，直接返回
+        if (isDead) return;
+
         currentHealth -= damage;
 
         if (healthBarCanvas != null) healthBarCanvas.SetActive(true);
@@ -126,6 +132,12 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        // 【核心修改】双重保险：如果已经标记为死亡，立刻停止
+        if (isDead) return;
+        
+        // 标记为已死，后续的子弹打上来也不会再触发 Die() 了
+        isDead = true;
+
         // 使用表格读来的分数
         if (GameManager.Instance != null) 
             GameManager.Instance.AddScore(scoreValue);
@@ -142,9 +154,28 @@ public class EnemyHealth : MonoBehaviour
     void DropGold()
     {
         if (goldPrefab == null) return;
-        // 使用表格读来的数量
+
+        // 计算掉落数量
         int count = Random.Range(minGoldDrops, maxGoldDrops + 1);
-        for (int i = 0; i < count; i++) Instantiate(goldPrefab, transform.position, Quaternion.identity);
+        
+        // === 【新增】判断是否需要大范围爆炸 ===
+        // 如果掉落数量大于 10 (说明是 Boss 或精英)，就让金币飞得更快更远
+        // 普通小兵掉 1-3 个，不需要炸太远
+        float speedMultiplier = (count >= 6) ? 2.5f : 1.0f;
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject coin = Instantiate(goldPrefab, transform.position, Quaternion.identity);
+            
+            // 获取金币上的 PowerUp 脚本，修改其初始速度
+            PowerUp p = coin.GetComponent<PowerUp>();
+            if (p != null)
+            {
+                // 乘上倍率，Boss 的金币会瞬间炸满全屏！
+                // 并且加一点随机性 (0.8 ~ 1.2)，让它们不要排得太整齐
+                p.initialSpeed *= speedMultiplier * Random.Range(0.8f, 1.2f);
+            }
+        }
     }
 
     void DropExtraLoot()

@@ -30,12 +30,15 @@ public class SquadSpawner : MonoBehaviour
 
     void Start()
     {
-        // 计算生成坐标基准点
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-        spawnY = screenBounds.y + 2f;   // 屏幕上方生成
-        spawnX = screenBounds.x + 1f;   // 屏幕两侧生成范围
         
-        // 启动关卡主流程
+        // === 【修改点】出生高度 ===
+        // 原来是 + 2f，改成 + 1f 或者 + 0.5f
+        // 这样飞机就在屏幕边缘刚好看不见的地方生成，能更快飞进画面
+        spawnY = screenBounds.y + 1.0f; 
+        
+        spawnX = screenBounds.x + 1f; 
+        
         StartCoroutine(LevelFlowRoutine());
     }
 

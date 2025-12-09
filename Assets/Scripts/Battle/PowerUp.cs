@@ -13,9 +13,12 @@ public enum ItemType
 
 public class PowerUp : MonoBehaviour
 {
+    [Header("配置")]
+    public int itemID = 2001; // 只填 ID，其他从表格读
+    
     [Header("道具类型设置")]
-    public ItemType itemType;
-    public int amount = 1; // 通用数值：加多少血/加多少分/护盾持续几秒
+    private ItemType itemType;
+    private int amount = 1; // 通用数值：加多少血/加多少分/护盾持续几秒
 
     [Header("运动设置")]
     public float initialSpeed = 5f;
@@ -35,9 +38,37 @@ public class PowerUp : MonoBehaviour
 
     void Start()
     {
-        // 1. 屏幕边界与运动初始化 (保持之前的弹力球逻辑)
+        // === 1. 初始化数据 (从 CSV 读取) ===
+        InitDataFromCSV();
+
+        // 2. 运动初始化
+        InitMovement();
+    }
+
+    void InitDataFromCSV()
+    {
+        if (DataManager.Instance == null) return;
+        var config = DataManager.Instance.GetItemConfig(itemID);
+
+        if (config != null)
+        {
+            // 数据注入
+            this.itemType = config.type;
+            this.amount = config.value;
+            // Debug.Log($"道具 {itemID} 初始化: 类型={itemType}, 数值={amount}");
+        }
+        else
+        {
+            Debug.LogError($"❌ 找不到 ID 为 {itemID} 的道具配置！");
+        }
+    }
+
+    // 为了代码整洁，把运动初始化封装一下
+    void InitMovement()
+    {
         float padding = 0.5f;
         Camera cam = Camera.main;
+        if(cam == null) return;
         float height = cam.orthographicSize;
         float width = height * cam.aspect;
         screenBounds = new Vector2(width - padding, height - padding);

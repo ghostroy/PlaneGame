@@ -339,6 +339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyDropCsvFile: {fileID: 4900000, guid: 9402a5b06e6cf9644af5257ee57bb385, type: 3}
+  itemDataCsvFile: {fileID: 4900000, guid: b25895fb9986fab4b94286661148e9db, type: 3}
   weaponUpgradeLevel: 1
   gold: 0
 --- !u!4 &1929330891
