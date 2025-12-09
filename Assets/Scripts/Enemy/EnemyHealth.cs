@@ -1,61 +1,60 @@
 using UnityEngine;
-using UnityEngine.UI; // 必须引用 UI 命名空间
+using UnityEngine.UI; 
 using System.Collections.Generic;
 
 public class EnemyHealth : MonoBehaviour
 {
+    // ==========================================
+    // 1. 需要在 Inspector 配置的 (只剩引用了)
+    // ==========================================
     [Header("配置与身份")]
-    public int enemyID = 1001; 
+    public int enemyID = 1001; // 这是唯一需要填数字的地方，用于查表
 
-    [Header("基础属性")] 
-    public int maxHealth = 3;  
-    public int scoreValue = 100;
-
-    // === 【修复点 1】加回 UI 变量定义 ===
-    [Header("UI 血条设置")]
-    public Image healthBarFill;       // 拖入那个红色的前景 Image
-    public GameObject healthBarCanvas;// 拖入整个血条 Canvas (用于满血隐藏/旋转锁定)
-
-    [Header("特效设置")]
+    [Header("UI 与 特效引用")]
+    public Image healthBarFill;       
+    public GameObject healthBarCanvas;
     public GameObject hitEffectPrefab;
     public GameObject dieEffectPrefab;
 
-    [Header("掉落设置")]
-    public GameObject goldPrefab; 
-    public int minGoldDrops = 1;  
-    public int maxGoldDrops = 3;
-    [Range(0f, 1f)]
-    public float extraDropChance = 0.2f; 
+    [Header("必掉金币引用")]
+    public GameObject goldPrefab; // 只拖 Prefab，数量由表格决定
 
+    // ==========================================
+    // 2. 运行时数据 (全部私有化，面板不可见)
+    // ==========================================
+    private int maxHealth;
+    private int currentHealth;
+    private int scoreValue;
+    private int minGoldDrops;
+    private int maxGoldDrops;
+    private float extraDropChance;
+    
+    private List<LootItem> currentLootList; 
+
+    // 波次奖励标记
+    private bool isWaveBonusTarget = false;
+
+    // 内部类定义
     [System.Serializable]
     public class LootItem
     {
         public string name;
         public GameObject prefab;
-        [Range(1, 100)] 
-        public int weight;
+        [Range(1, 100)] public int weight;
     }
 
-    private List<LootItem> currentLootList; 
-    private int currentHealth;
+    // ==========================================
+    // 3. 逻辑代码
+    // ==========================================
 
     void Start()
     {
-        // 1. 读取 CSV 数据
-        // 这一步会把 maxHealth 和 currentHealth 都覆盖为表格里的数值
-        // 所以 Inspector 里填多少都已经不重要了
-        InitDataFromCSV();
+        // 1. 从 CSV 读取所有数值
+        InitDataFromCSV(); 
 
-        // 2. 强制更新一次 UI
-        // 确保进游戏时，血条长度是根据表格数据计算的满血状态
+        // 2. 初始化血条
         UpdateHealthBar();
-        
-        // 3. 【核心修改】强制显示血条
-        // 之前可能有代码写了 SetActive(false)，请删掉或改成 true
-        if (healthBarCanvas != null) 
-        {
-            healthBarCanvas.SetActive(true);
-        }
+        if (healthBarCanvas != null) healthBarCanvas.SetActive(true);
     }
 
     void InitDataFromCSV()
@@ -65,13 +64,10 @@ public class EnemyHealth : MonoBehaviour
 
         if (config != null)
         {
-            // === 数据覆盖逻辑 ===
-            // 这里从 CSV 读出的 hp 会直接覆盖掉 Inspector 里的设置
-            this.maxHealth = config.hp; 
-            
-            // 关键：进游戏时不仅上限要改，当前血量也要填满！
-            this.currentHealth = config.hp; 
-
+            // === 全权由表格接管 ===
+            this.maxHealth = config.hp;
+            this.currentHealth = config.hp; // 满血初始化
+            this.scoreValue = config.score; // 分数
             this.minGoldDrops = config.minGold;
             this.maxGoldDrops = config.maxGold;
             this.extraDropChance = config.extraChance;
@@ -83,26 +79,30 @@ public class EnemyHealth : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"未找到 ID {enemyID} 的配置，使用 Inspector 默认值。");
+            Debug.LogError($"❌ 严重错误：找不到 ID {enemyID} 的配置！敌人将无法正常运作。");
+            // 只有出错时给个保底值，防止除以0报错
+            maxHealth = 1; currentHealth = 1; 
         }
     }
 
     void Update()
     {
-        // 【修复点 3】锁定血条旋转
-        // 防止血条跟着飞机乱转，让它始终水平显示
+        // 锁定血条旋转
         if (healthBarCanvas != null && healthBarCanvas.activeSelf)
         {
             healthBarCanvas.transform.rotation = Quaternion.identity;
         }
     }
 
+    public void SetWaveBonusTarget(bool isBonus)
+    {
+        this.isWaveBonusTarget = isBonus;
+    }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
 
-        // 【修复点 4】受伤时显示血条并更新长度
         if (healthBarCanvas != null) healthBarCanvas.SetActive(true);
         UpdateHealthBar();
 
@@ -115,12 +115,10 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    // === 【修复点 5】核心 UI 更新逻辑 ===
     void UpdateHealthBar()
     {
-        if (healthBarFill != null)
+        if (healthBarFill != null && maxHealth > 0)
         {
-            // 注意：必须强转 (float)，否则 2/3 会变成 0
             float fillAmount = (float)currentHealth / maxHealth;
             healthBarFill.fillAmount = fillAmount;
         }
@@ -128,8 +126,12 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
-        if (GameManager.Instance != null) GameManager.Instance.AddScore(scoreValue);
-        if (dieEffectPrefab != null) Instantiate(dieEffectPrefab, transform.position, Quaternion.identity);
+        // 使用表格读来的分数
+        if (GameManager.Instance != null) 
+            GameManager.Instance.AddScore(scoreValue);
+
+        if (dieEffectPrefab != null) 
+            Instantiate(dieEffectPrefab, transform.position, Quaternion.identity);
 
         DropGold();
         DropExtraLoot();
@@ -137,10 +139,10 @@ public class EnemyHealth : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // ... (掉落逻辑保持不变) ...
-    void DropGold() 
+    void DropGold()
     {
         if (goldPrefab == null) return;
+        // 使用表格读来的数量
         int count = Random.Range(minGoldDrops, maxGoldDrops + 1);
         for (int i = 0; i < count; i++) Instantiate(goldPrefab, transform.position, Quaternion.identity);
     }
@@ -148,19 +150,37 @@ public class EnemyHealth : MonoBehaviour
     void DropExtraLoot()
     {
         if (currentLootList == null || currentLootList.Count == 0) return;
-        if (Random.value > extraDropChance) return;
-        
-        int totalWeight = 0;
-        foreach (var item in currentLootList) totalWeight += item.weight;
-        int randomValue = Random.Range(0, totalWeight);
-        foreach (var item in currentLootList)
+
+        bool shouldDrop = false;
+
+        // 判定：是波次奖励怪？ OR 随机判定通过？
+        if (isWaveBonusTarget)
         {
-            if (randomValue < item.weight)
+            shouldDrop = true;
+            Debug.Log("🎁 波次奖励触发！");
+        }
+        else
+        {
+            // 使用表格读来的概率
+            if (Random.value <= extraDropChance) shouldDrop = true;
+        }
+
+        if (shouldDrop)
+        {
+            int totalWeight = 0;
+            foreach (var item in currentLootList) totalWeight += item.weight;
+
+            int randomValue = Random.Range(0, totalWeight);
+
+            foreach (var item in currentLootList)
             {
-                Instantiate(item.prefab, transform.position, Quaternion.identity);
-                return;
+                if (randomValue < item.weight)
+                {
+                    Instantiate(item.prefab, transform.position, Quaternion.identity);
+                    return;
+                }
+                randomValue -= item.weight;
             }
-            randomValue -= item.weight;
         }
     }
 }

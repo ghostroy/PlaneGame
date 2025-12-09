@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 2600193014861577933, guid: 207ae769709c5504382e4035dde317ae, type: 3}
-  fireRate: 0.5
+  fireRate: 1
   startDelay: 1
   aimAtPlayer: 1
 --- !u!114 &-1681743831711813292

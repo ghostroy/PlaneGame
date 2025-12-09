@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro; // 引用 TMP
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,19 +9,17 @@ public class GameManager : MonoBehaviour
     [Header("UI 设置")]
     public TMP_Text scoreText;          
     public GameObject gameOverPanel;
-    public TMP_Text finalScoreText;     
+    public TMP_Text finalScoreText;
+    
+    // === 【新增】胜利面板 ===
+    public GameObject victoryPanel; 
 
     private int score = 0;
     private bool isGameOver = false;
 
     void Awake()
     {
-        // === 1. 单例初始化 ===
-        // 覆盖 Instance，确保每个场景都有新的 GameManager
         Instance = this;
-
-        // === 2. 强制恢复时间 ===
-        // 防止上一局暂停导致新游戏卡住
         Time.timeScale = 1f;
         isGameOver = false;
     }
@@ -29,6 +27,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         if(gameOverPanel != null) gameOverPanel.SetActive(false);
+        if(victoryPanel != null) victoryPanel.SetActive(false); // 隐藏胜利面板
         UpdateScoreUI();
     }
 
@@ -41,10 +40,7 @@ public class GameManager : MonoBehaviour
 
     void UpdateScoreUI()
     {
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + score;
-        }
+        if (scoreText != null) scoreText.text = "Score: " + score;
     }
 
     // === 3. 游戏结束逻辑 ===
@@ -63,6 +59,44 @@ public class GameManager : MonoBehaviour
                 finalScoreText.text = "Final Score: " + score;
             }
         }
+    }
+
+    // === 【新增】关卡胜利逻辑 ===
+    public void LevelComplete()
+    {
+        if (isGameOver) return;
+        
+        Debug.Log("🎉 关卡胜利！BOSS 已被击败！");
+        
+        // 稍微延迟一下显示面板，体验更好
+        Invoke("ShowVictoryPanel", 2f);
+    }
+
+    void ShowVictoryPanel()
+    {
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(true);
+            // 这里可以暂停游戏，也可以让玩家继续飞一会儿
+            Time.timeScale = 0f; 
+        }
+    }
+
+    // === 【新增】进入下一关 ===
+    public void LoadNextLevel()
+    {
+        Time.timeScale = 1f;
+        
+        // 更新 DataManager 里的关卡数 (如果有的话)
+        if (DataManager.Instance != null)
+        {
+            // 这里我们暂时还没有 level 变量，但可以先留个位置
+            // DataManager.Instance.currentLevelIndex++; 
+        }
+
+        // 因为你说“重复玩一遍”，所以我们重新加载当前场景
+        // 未来设计了 Level2, Level3 后，这里可以改成 LoadScene(currentLevel + 1)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // === 4. 重启逻辑 ===
