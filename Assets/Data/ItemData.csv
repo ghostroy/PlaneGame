@@ -1,0 +1,7 @@
+ID,Name,Type,Value
+2001,WeaponUp,WeaponUpgrade,1
+2002,HealthSmall,Health,20
+2003,Shield,Shield,10
+2004,Bomb,Bomb,1
+2005,GoldCoin,Gold,1
+2006,Magnet,Magnet,15

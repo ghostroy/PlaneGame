@@ -149,38 +149,59 @@ public class EnemyHealth : MonoBehaviour
 
     void DropExtraLoot()
     {
+        // 1. 安全检查：如果池子是空的，直接返回
         if (currentLootList == null || currentLootList.Count == 0) return;
 
+        // 2. === 第一步：决定“是否”掉落 ===
         bool shouldDrop = false;
 
-        // 判定：是波次奖励怪？ OR 随机判定通过？
         if (isWaveBonusTarget)
         {
+            // A. 如果是波次奖励怪：100% 掉落
             shouldDrop = true;
-            Debug.Log("🎁 波次奖励触发！");
+            Debug.Log("🎁 触发波次必掉奖励！");
         }
         else
         {
-            // 使用表格读来的概率
-            if (Random.value <= extraDropChance) shouldDrop = true;
+            // B. 如果是普通怪：根据表格里的概率 (ExtraChance) 判定
+            if (Random.value <= extraDropChance)
+            {
+                shouldDrop = true;
+            }
         }
 
-        if (shouldDrop)
+        // 如果判定结果是不掉，直接结束，什么都不给
+        if (!shouldDrop) return;
+
+
+        // 3. === 第二步：决定“掉哪一个” (权重随机) ===
+        // 这是一个“排他性”的选择，只会选中一个
+
+        // A. 算出总权重 (分母)
+        int totalWeight = 0;
+        foreach (var item in currentLootList)
         {
-            int totalWeight = 0;
-            foreach (var item in currentLootList) totalWeight += item.weight;
+            totalWeight += item.weight;
+        }
 
-            int randomValue = Random.Range(0, totalWeight);
+        // B. 随机取一个值 (指针)
+        int randomValue = Random.Range(0, totalWeight);
 
-            foreach (var item in currentLootList)
+        // C. 遍历列表，看指针落在谁的区间里
+        foreach (var item in currentLootList)
+        {
+            if (randomValue < item.weight)
             {
-                if (randomValue < item.weight)
-                {
-                    Instantiate(item.prefab, transform.position, Quaternion.identity);
-                    return;
-                }
-                randomValue -= item.weight;
+                // 🎯 选中了！生成这唯一的道具
+                Instantiate(item.prefab, transform.position, Quaternion.identity);
+                
+                // 🛑 【关键】立即返回！
+                // 这行 return 保证了循环结束，绝对不会再掉第二个
+                return; 
             }
+            
+            // 没选中，减去当前权重，继续问下一个
+            randomValue -= item.weight;
         }
     }
 }

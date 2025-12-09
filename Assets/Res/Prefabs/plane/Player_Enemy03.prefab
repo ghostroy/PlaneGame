@@ -171,7 +171,7 @@ GameObject:
   - component: {fileID: 7928955980446007983}
   - component: {fileID: 7565091126324128527}
   - component: {fileID: -5264633814511347286}
-  - component: {fileID: -556882662192475002}
+  - component: {fileID: 7222517896082265604}
   - component: {fileID: -1588051601459644339}
   m_Layer: 6
   m_Name: Player_Enemy03
@@ -282,17 +282,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyID: 1003
-  maxHealth: 3
-  scoreValue: 100
   healthBarFill: {fileID: 5106811934542942123}
   healthBarCanvas: {fileID: 8048425762903314205}
   hitEffectPrefab: {fileID: 1657610078975196133, guid: 0f40e043a58d20c4d99c7e58ba40e680, type: 3}
   dieEffectPrefab: {fileID: 1657610078975196133, guid: b9288f90a55c2fa47a4722152fe56afa, type: 3}
   goldPrefab: {fileID: 3048337756469983815, guid: a1072253c849e614cbc15a5d417fbca9, type: 3}
-  minGoldDrops: 1
-  maxGoldDrops: 3
-  extraDropChance: 0
---- !u!114 &-556882662192475002
+--- !u!114 &7222517896082265604
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -301,13 +296,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5565494626657822177}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b564fe10f2b329a4f9fa333ce34a94b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 53ace8a531e70c24c9301143b97d23da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 2600193014861577933, guid: e769720a26602d448a8da35bf215dbf6, type: 3}
-  fireRate: 0.5
+  fireRate: 1
   startDelay: 2
-  aimAtPlayer: 1
+  bulletCount: 20
+  spinPattern: 1
+  spinAngleStep: 10
 --- !u!114 &-1588051601459644339
 MonoBehaviour:
   m_ObjectHideFlags: 0

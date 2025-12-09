@@ -77,8 +77,33 @@ public class GameManager : MonoBehaviour
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);
-            // 这里可以暂停游戏，也可以让玩家继续飞一会儿
-            Time.timeScale = 0f; 
+            
+            
+            // === 【新增】为了安全，胜利时清除全屏敌人和子弹 ===
+            TriggerBomb(); 
+
+            // === 【新增】禁止玩家操作 ===
+            DisablePlayerControl();
+        }
+    }
+
+    // 新增一个方法来禁用玩家
+    void DisablePlayerControl()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            // 1. 禁止移动
+            PlayerController pc = player.GetComponent<PlayerController>();
+            if (pc != null) pc.enabled = false; 
+
+            // 2. 禁止射击
+            PlayerShooting ps = player.GetComponent<PlayerShooting>();
+            if (ps != null) ps.enabled = false;
+
+            // 3. (可选) 让玩家进入无敌状态，防止意外死亡
+            PlayerHealth ph = player.GetComponent<PlayerHealth>();
+            if (ph != null) ph.ActivateShield(999f); // 给个超长护盾
         }
     }
 

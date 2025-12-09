@@ -103,7 +103,7 @@ MonoBehaviour:
   amount: 100
   initialSpeed: 1
   friction: 5
-  minSpeed: 0.1
+  minSpeed: 0.2
   baseMagnetRange: 0.5
   magnetSpeed: 5
 --- !u!61 &7183006051877620408

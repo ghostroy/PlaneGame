@@ -101,9 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   amount: 1
-  initialSpeed: 1
+  initialSpeed: 2
   friction: 2
-  minSpeed: 0.5
+  minSpeed: 2
   baseMagnetRange: 0.5
   magnetSpeed: 5
 --- !u!61 &7183006051877620408
