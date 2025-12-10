@@ -282,16 +282,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyID: 1001
-  maxHealth: 10
-  scoreValue: 10
   healthBarFill: {fileID: 5106811934542942123}
   healthBarCanvas: {fileID: 8048425762903314205}
   hitEffectPrefab: {fileID: 1657610078975196133, guid: 0f40e043a58d20c4d99c7e58ba40e680, type: 3}
   dieEffectPrefab: {fileID: 1657610078975196133, guid: b9288f90a55c2fa47a4722152fe56afa, type: 3}
   goldPrefab: {fileID: 3048337756469983815, guid: a1072253c849e614cbc15a5d417fbca9, type: 3}
-  minGoldDrops: 1
-  maxGoldDrops: 2
-  extraDropChance: 0.2
 --- !u!114 &-556882662192475002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,7 +428,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: -0.227}
-  m_SizeDelta: {x: 1, y: 0.1}
+  m_SizeDelta: {x: 0.6, y: 0.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6622856905977052547
 Canvas:
