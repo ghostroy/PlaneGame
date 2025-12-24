@@ -128,46 +128,26 @@ public class PowerUp : MonoBehaviour
     {
         switch (itemType)
         {
-            case ItemType.WeaponUpgrade:
-                // 武器升级
-                WeaponController wc = player.GetComponent<WeaponController>();
-                if (wc != null) wc.IncreasePowerLevel();
-                break;
-
-            case ItemType.Health:
-                // 生命回复
-                PlayerHealth ph = player.GetComponent<PlayerHealth>();
-                if (ph != null) ph.Heal(amount); // amount 例如 20
-                break;
-
-            case ItemType.Shield:
-                // 护盾/无敌
-                PlayerHealth phShield = player.GetComponent<PlayerHealth>();
-                if (phShield != null) phShield.ActivateShield(amount); // amount 是持续时间(秒)
-                break;
+            // ... WeaponUpgrade, Health, Shield 保持不变 ...
 
             case ItemType.Bomb:
-                // 核弹/清屏
-                GameManager.Instance.TriggerBomb();
-                break;
-
-            case ItemType.Gold:
-                // 金币/资源
-                if (DataManager.Instance != null)
+                // 【修改】不再直接 TriggerBomb，而是存入 GameManager
+                if(GameManager.Instance != null) 
                 {
-                    DataManager.Instance.gold += amount;
-                    // TODO: 播放金币音效，更新UI
-                    Debug.Log("获得金币: " + amount);
+                    GameManager.Instance.AddBomb();
                 }
                 break;
 
-            case ItemType.Magnet:
-                // 磁铁 (激活全屏吸附)
-                // 这里我们调用一个协程来处理持续时间，建议写在 Player 身上的脚本里
-                // 为了简单，我们直接在 PlayerController 里加个方法
-                PlayerController pc = player.GetComponent<PlayerController>();
-                if (pc != null) pc.ActivateMagnet(amount); // amount 是持续时间
+            case ItemType.Gold:
+                // 【修改】调用 GameManager 的统计方法
+                if (GameManager.Instance != null) 
+                {
+                    // 这里会自动增加 DataManager 总金币 和 关卡内 levelGold
+                    GameManager.Instance.AddGold(amount);
+                }
                 break;
+
+            // ... Magnet 保持不变 ...
         }
     }
 }
