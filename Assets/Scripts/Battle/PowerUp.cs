@@ -126,28 +126,72 @@ public class PowerUp : MonoBehaviour
 
     void ApplyEffect(GameObject player)
     {
+        // 这里的 itemType 和 amount 是在 Start 时通过 CSV 加载好的
         switch (itemType)
         {
-            // ... WeaponUpgrade, Health, Shield 保持不变 ...
+            case ItemType.WeaponUpgrade:
+                // === 武器升级逻辑 ===
+                WeaponController wc = player.GetComponent<WeaponController>();
+                if (wc != null)
+                {
+                    // 确保调用的是正确的升级方法名
+                    wc.IncreasePowerLevel();
+                }
+                else
+                {
+                    Debug.LogWarning("未在 Player 上找到 WeaponController！");
+                }
+                break;
+
+            case ItemType.Health:
+                // === 生命回复逻辑 ===
+                PlayerHealth ph = player.GetComponent<PlayerHealth>();
+                if (ph != null)
+                {
+                    ph.Heal(amount); // amount 来自 CSV，如 20
+                }
+                break;
+
+            case ItemType.Shield:
+                // === 护盾/无敌逻辑 ===
+                PlayerHealth phShield = player.GetComponent<PlayerHealth>();
+                if (phShield != null)
+                {
+                    // 参数：持续时间(amount), 是否显示蓝圈特效(true/false)
+                    // 关卡内道具建议显示特效，结算时的自动无敌建议设为 false
+                    phShield.ActivateShield(amount, true); 
+                }
+                break;
 
             case ItemType.Bomb:
-                // 【修改】不再直接 TriggerBomb，而是存入 GameManager
-                if(GameManager.Instance != null) 
+                // === 核弹存入仓库逻辑 (不即时炸) ===
+                if (GameManager.Instance != null)
                 {
                     GameManager.Instance.AddBomb();
                 }
                 break;
 
             case ItemType.Gold:
-                // 【修改】调用 GameManager 的统计方法
-                if (GameManager.Instance != null) 
+                // === 金币统计逻辑 ===
+                if (GameManager.Instance != null)
                 {
-                    // 这里会自动增加 DataManager 总金币 和 关卡内 levelGold
+                    // 这里会同时更新 DataManager 的持久化金币和当前关卡的结算金币
                     GameManager.Instance.AddGold(amount);
                 }
                 break;
 
-            // ... Magnet 保持不变 ...
+            case ItemType.Magnet:
+                // === 磁铁全屏吸附逻辑 ===
+                PlayerController pc = player.GetComponent<PlayerController>();
+                if (pc != null)
+                {
+                    pc.ActivateMagnet(amount); // amount 是持续时间，如 15秒
+                }
+                break;
+
+            default:
+                Debug.LogWarning("未知的道具类型：" + itemType);
+                break;
         }
     }
 }
